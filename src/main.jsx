@@ -1,17 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 import './styles/styles.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { BrowserRouter } from 'react-router-dom';
-import CartProvider from './components/ContextoCarrito';
-import App from './App.jsx'
+import ProveedorAutenticacion from './components/ContextoAutenticacion';
+import ProveedorCarrito from './components/ContextoCarrito';
+import App from './App.jsx';
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <BrowserRouter>
-      <CartProvider>
-        <App />
-      </CartProvider>
-    </BrowserRouter>
-  </StrictMode>
+    <StrictMode>
+        <BrowserRouter>
+            <ProveedorAutenticacion>
+                <ProveedorCarrito>
+                    <App />
+                </ProveedorCarrito>
+            </ProveedorAutenticacion>
+        </BrowserRouter>
+    </StrictMode>
 );
