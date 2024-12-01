@@ -9,19 +9,24 @@ export default function Catalogo() {
   const [categoriaFiltro, setCategoriaFiltro] = useState('');
   const [marcaFiltro, setMarcaFiltro] = useState('');
   const [orden, setOrden] = useState('');
+  const [busqueda, setBusqueda] = useState('');
   const { token } = usarAutenticacion();
 
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const categoriaQuery = queryParams.get('categoria');
+  const buscarQuery = queryParams.get('buscar');
 
-  // Sincronizar la categoría de la URL con el filtro
+  // Sincronizar la categoría y búsqueda de la URL con los filtros
   useEffect(() => {
     if (categoriaQuery) {
       setCategoriaFiltro(categoriaQuery);
     }
-  }, [categoriaQuery]);
+    if (buscarQuery) {
+      setBusqueda(buscarQuery.toLowerCase());
+    }
+  }, [categoriaQuery, buscarQuery]);
 
   // Actualizar productos desde el backend
   useEffect(() => {
@@ -57,6 +62,7 @@ export default function Catalogo() {
   const productosFiltrados = productos
       .filter((producto) => (!categoriaFiltro || producto.categoria === categoriaFiltro))
       .filter((producto) => (!marcaFiltro || producto.marca === marcaFiltro))
+      .filter((producto) => (!busqueda || producto.nombre.toLowerCase().includes(busqueda)))
       .sort((a, b) => {
         if (orden === 'precioAsc') return a.precio - b.precio;
         if (orden === 'precioDesc') return b.precio - a.precio;
