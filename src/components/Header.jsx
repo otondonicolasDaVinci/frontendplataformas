@@ -1,13 +1,15 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { usarAutenticacion } from './ContextoAutenticacion';
+import {useState} from 'react';
+import {Link, useNavigate} from 'react-router-dom';
+import {usarAutenticacion} from './ContextoAutenticacion';
 import ModalLogin from './ModalLogin';
+import ModalRegistro from './ModalRegistro';
 
 export default function Header() {
-    const { usuario, cerrarSesion } = usarAutenticacion();
+    const {usuario, cerrarSesion} = usarAutenticacion();
     const [mostrarDropdown, setMostrarDropdown] = useState(false);
     const [mostrarModalLogin, setMostrarModalLogin] = useState(false);
-    const [busqueda, setBusqueda] = useState(''); // Estado para el texto de búsqueda
+    const [mostrarModalRegistro, setMostrarModalRegistro] = useState(false);
+    const [busqueda, setBusqueda] = useState('');
     const navegar = useNavigate();
 
     const toggleDropdown = () => setMostrarDropdown(!mostrarDropdown);
@@ -15,7 +17,7 @@ export default function Header() {
     const realizarBusqueda = () => {
         if (busqueda.trim() !== '') {
             navegar(`/catalogo?buscar=${busqueda.trim()}`);
-            setBusqueda(''); // Limpia el campo de búsqueda
+            setBusqueda('');
         }
     };
 
@@ -41,7 +43,7 @@ export default function Header() {
                     className="input"
                     value={busqueda}
                     onChange={(e) => setBusqueda(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && realizarBusqueda()} // Búsqueda al presionar Enter
+                    onKeyDown={(e) => e.key === 'Enter' && realizarBusqueda()}
                 />
                 <button className="boton-buscar" onClick={realizarBusqueda}>
                     <i className="fas fa-search"></i>
@@ -66,9 +68,14 @@ export default function Header() {
                         )}
                     </div>
                 ) : (
-                    <a onClick={() => setMostrarModalLogin(true)}>
-                        <i className="fas fa-user"></i> Login
-                    </a>
+                    <>
+                        <a onClick={() => setMostrarModalLogin(true)}>
+                            <i className="fas fa-user"></i> Login
+                        </a>
+                        <a onClick={() => setMostrarModalRegistro(true)}>
+                            <i className="fas fa-user-plus"></i> Registrarse
+                        </a>
+                    </>
                 )}
                 <Link to="/carrito">
                     <i className="fas fa-shopping-cart"></i>
@@ -79,6 +86,12 @@ export default function Header() {
                 <ModalLogin
                     cerrarModal={() => setMostrarModalLogin(false)}
                     loginExitoso={() => setMostrarModalLogin(false)}
+                />
+            )}
+
+            {mostrarModalRegistro && (
+                <ModalRegistro
+                    cerrarModal={() => setMostrarModalRegistro(false)}
                 />
             )}
         </header>
